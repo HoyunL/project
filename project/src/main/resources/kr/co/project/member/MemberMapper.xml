@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.project.member.MemberMapper">
+	<insert id="insert" parameterType="kr.co.project.member.MemberVO">
+		INSERT INTO member (
+			email, pwd, name, gender, birthday, hp, zipcode, addr1, addr2, regdate
+		)VALUES(
+		#{email}, md5(#{pwd}), #{name}, #{gender}, #{birthday}, #{hp}, #{zipcode}, #{addr1}, #{addr2}, NOW()
+		)
+	</insert>
+	
+	<select id="emailDupCheck" parameterType="string" resultType="int"> <!-- string -->
+		SELECT COUNT(*) FROM member WHERE email = #{email}
+	</select>
+	
+	<select id="loginCheck" parameterType="kr.co.project.member.MemberVO" resultType="kr.co.project.member.MemberVO">
+		SELECT * FROM member WHERE email = #{email} AND pwd = md5(#{pwd})  <!-- login은 ${}절대 사용하지말 것 #{} 사용 -->
+	</select>
+	
+	<select id="findEmail" parameterType="kr.co.project.member.MemberVO" resultType="kr.co.project.member.MemberVO">
+		SELECT * FROM member where name = #{name} and hp = #{hp}
+	</select>
+	
+	<select id="findPwd" parameterType="kr.co.project.member.MemberVO" resultType="kr.co.project.member.MemberVO">
+		SELECT * FROM member where name = #{name} and hp = #{hp} and email = #{email}
+	</select>
+	
+	
+	<update id="updateTempPwd" parameterType="kr.co.project.member.MemberVO">
+		UPDATE member set pwd = md5(#{pwd}) where name = #{name} and hp = #{hp} and email = #{email}
+	</update>
+</mapper>

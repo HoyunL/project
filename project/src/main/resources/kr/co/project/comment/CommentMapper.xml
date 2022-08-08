@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.project.comment.CommentMapper">
+	
+	<insert id = "insert" parameterType="kr.co.project.comment.CommentVO">
+		insert into comment(content, member_no, board_no, regdate, tablename 
+		)
+		values (
+			#{content},#{member_no},#{board_no},NOW(),#{tablename}
+		)
+	</insert>
+	
+	
+	<select id="count" parameterType="kr.co.project.comment.CommentVO" resultType="java.lang.Integer">
+	   select count(*) from comment
+		where board_no = #{board_no} and tablename = #{tablename}
+	</select>
+	
+	<select id = "list" parameterType="kr.co.project.comment.CommentVO" resultType="kr.co.project.comment.CommentVO">
+			select *,(select name from member where no = comment.member_no) as member_name
+			from comment
+			where board_no = #{board_no} and tablename = #{tablename}
+			order by regdate desc
+			limit ${startIdx},${pageRow};
+	</select>
+	
+	
+	<delete id="delete" parameterType="int">
+		delete from comment where no = #{no}
+	</delete>
+	</mapper>
